@@ -34,9 +34,11 @@ let matrixSvg;
 document.addEventListener('DOMContentLoaded', () => {
     initDOMElements();
     loadSettings();
+    initializeSeedData();
     initRouting();
     initMarkdownEditor();
     initSettingsDrawer();
+    initWelcomeModal();
     initDataActions();
     initChatWidget();
 
@@ -97,12 +99,12 @@ function updateAPIStatusUI() {
 
     if (state.apiKey) {
         dot.className = 'status-dot success';
-        txt.textContent = 'API Live';
-        if (warningLabel) warningLabel.textContent = 'Gemini 2.5 Flash analysis ready.';
+        txt.textContent = 'Gemini Live';
+        if (warningLabel) warningLabel.textContent = 'Connected to Gemini 2.5 Flash API.';
     } else {
-        dot.className = 'status-dot warning';
-        txt.textContent = 'Mock Mode';
-        if (warningLabel) warningLabel.textContent = 'Running in Mock Mode. Enter a Google AI Studio API Key in settings for live analysis.';
+        dot.className = 'status-dot success-demo';
+        txt.textContent = 'Smart Demo Active';
+        if (warningLabel) warningLabel.textContent = 'Running in Smart Demo Mode. Configure a custom Gemini Key in settings if desired.';
     }
 }
 
@@ -1068,7 +1070,9 @@ function displayAssessmentResults(log) {
     const section = document.getElementById('analysis-result-section');
     section.classList.remove('hidden');
 
-    document.getElementById('assessment-timestamp').textContent = `Analyzed on ${new Date(log.timestamp).toLocaleDateString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}`;
+    const dateObj = new Date(log.timestamp);
+    const formattedDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) + ' ' + dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('assessment-timestamp').textContent = `Analyzed on ${formattedDate}`;
 
     // Badges
     const moodBadge = document.getElementById('assessment-mood-badge');
@@ -1261,26 +1265,32 @@ Respond in a friendly, conversational manner. Provide short, constructive academ
 // Mock Chat responses
 function generateMockChatReply(msg) {
     const text = msg.toLowerCase();
+    const responses = [];
 
-    if (text.includes('backlog')) {
-        return `Syllabus backlogs can feel like a heavy weight. Let's make an immediate commitment:
-- **Rule of 1-Hour:** Set a timer for 1 hour every morning dedicated *only* to the backlog.
-- When the timer rings, stop immediately. Return to your daily current study topics.
-This prevents the backlog from eating into your current studies while steadily chipping away at it. Which chapter is causing the most panic?`;
+    if (text.includes('backlog') || text.includes('behind') || text.includes('pending') || text.includes('syllabus')) {
+        responses.push(`📚 **Dealing with syllabus backlog:** Focus on allocating just 1 hour every morning dedicated *only* to covering backlog topics. Keep your current daily classwork running in parallel so you do not generate new backlogs. Which specific chapter is causing the most panic?`);
     }
-    if (text.includes('mock') || text.includes('score') || text.includes('panic') || text.includes('exam')) {
-        return `Mock exams are diagnostic tools, not evaluation metrics of your final competence. Try this method:
-1. Divide questions into 3 categories: *Concept Missed*, *Silly Math Error*, *Time Pressure*.
-2. Focus on fixing the *Silly Math Errors* first—they are the easiest marks to gain back.
-How much did your score drop by in the last paper?`;
+    if (text.includes('parent') || text.includes('family') || text.includes('father') || text.includes('mother') || text.includes('expect') || text.includes('pressure')) {
+        responses.push(`👥 **Handling family pressure:** Parental expectations usually stem from care, but they can feel overwhelming. Try explaining your mock logs and revision schedules to them calmly. Separating your self-worth from test marks is crucial.`);
+    }
+    if (text.includes('sleep') || text.includes('insomnia') || text.includes('tired') || text.includes('fatigue') || text.includes('night') || text.includes('exhausted') || text.includes('rest')) {
+        responses.push(`🧘 **Managing sleep and exhaustion:** Academic performance is heavily tied to sleep. Restricting sleep to study more is self-defeating, as it impairs recall. Enforce a hard stop at 11:30 PM. Sleeping 7 hours is non-negotiable.`);
+    }
+    if (text.includes('marks') || text.includes('score') || text.includes('drop') || text.includes('rank') || text.includes('mock') || text.includes('test') || text.includes('exam')) {
+        responses.push(`📉 **Analyzing mock test drops:** Treat score drops as diagnostics rather than final rankings. Do a structured error analysis (concept gaps vs calculation slips) and log errors in a dedicated "Mistake Diary" to reclaim easy marks.`);
     }
     if (text.includes('compare') || text.includes('peer') || text.includes('others') || text.includes('everyone')) {
-        return `Peer comparison is a recipe for impostor syndrome. Students only share their best marks on social groups, creating a false impression.
-Try disconnecting from academy discussions for 7 days. Your only competitor is the version of you from yesterday. How can we make your physics or math concepts 1% better today?`;
+        responses.push(`✨ **Countering peer comparison:** Public leaderboard rankings are curated and highly deceptive. Focus exclusively on your own personal growth metrics week-over-week. Mute study discussion threads for 7 days.`);
     }
 
-    return `I understand competitive exam preparation is tough. Break your day into study blocks of 50 minutes followed by a 10-minute walk.
-What specific subject or stress factor is bothering you most right now? Let's break it down together.`;
+    if (responses.length > 0) {
+        if (responses.length === 1) {
+            return responses[0];
+        }
+        return `I hear that you are dealing with multiple challenges simultaneously. Let's address them step-by-step:\n\n` + responses.join('\n\n');
+    }
+
+    return `I understand competitive exam preparation is tough. Break your day into study blocks of 50 minutes followed by a 10-minute walk.\n\nWhat specific subject or stress factor is bothering you most right now? Let's break it down together.`;
 }
 
 // -------------------------------------------------------------
@@ -1377,4 +1387,102 @@ function loadMockHistory() {
 
     state.logs = sampleLogs;
     localStorage.setItem('zenith_journal_logs', JSON.stringify(state.logs));
+}
+
+// Seeds 4 detailed logs on first load if localStorage is empty
+function initializeSeedData() {
+    const savedLogs = localStorage.getItem('zenith_journal_logs');
+    if (!savedLogs || JSON.parse(savedLogs).length === 0) {
+        const sampleLogs = [
+            {
+                id: 'seed-log-1',
+                timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+                rawText: "I feel completely overwhelmed by my syllabus backlog. Organic Chemistry is piling up with 5 chapters pending. Every time I think of mock tests, backlog panic keeps pacing through my mind. I feel so far behind my classmates.",
+                analysis: {
+                    mood: "Overwhelmed",
+                    moodScore: 3,
+                    backlogPanic: 8,
+                    mockTestDrop: 4,
+                    peerComparison: 7,
+                    otherAnxiety: 5,
+                    empatheticResponse: "Syllabus backlog panic is causing analysis paralysis. Break down the chapters. Study 45 minutes of backlog first thing in the morning, then focus on fresh concepts. Mute rank chats for a few days to ease the peer comparison stress.",
+                    keyTriggers: ["Organic Chemistry backlog", "mock tests", "far behind"]
+                }
+            },
+            {
+                id: 'seed-log-2',
+                timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+                rawText: "Disappointed with my physics mock test marks today. Scores dropped by 40 marks. Roommate scored top-10 and I secretly feel so incompetent. Integration maths is also pending.",
+                analysis: {
+                    mood: "Disappointed",
+                    moodScore: 4,
+                    backlogPanic: 6,
+                    mockTestDrop: 9,
+                    peerComparison: 8,
+                    otherAnxiety: 4,
+                    empatheticResponse: "A mock drop is a natural diagnostic phase. Shift focus from leaderboard ranks to identifying core concept mistakes. Solve 10 math integration problems step-by-step today.",
+                    keyTriggers: ["physics mock test drop", "roommate selection", "incompetent feelings"]
+                }
+            },
+            {
+                id: 'seed-log-3',
+                timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                rawText: "Couldn't sleep last night because I was thinking about mock test drops. I am so tired and exhausted. Parents called and asked about my score, which added to the pressure.",
+                analysis: {
+                    mood: "Fatigued",
+                    moodScore: 3,
+                    backlogPanic: 5,
+                    mockTestDrop: 8,
+                    peerComparison: 6,
+                    otherAnxiety: 8,
+                    empatheticResponse: "Sleep deprivation directly harms cognitive performance. Enforce a hard stop at 11:30 PM. Speak with your parents calmly about academic exhaustion—they care about your well-being first.",
+                    keyTriggers: ["insomnia/no sleep", "parent expectations", "exhausted"]
+                }
+            },
+            {
+                id: 'seed-log-4',
+                timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                rawText: "Had a productive study day! Muted all student discussion groups. Slept 7 hours last night. Physics backlog is starting to clear and I feel much calmer.",
+                analysis: {
+                    mood: "Calm & Focused",
+                    moodScore: 8,
+                    backlogPanic: 3,
+                    mockTestDrop: 2,
+                    peerComparison: 2,
+                    otherAnxiety: 2,
+                    empatheticResponse: "Outstanding boundary setting. Disconnecting from public leaderboards directly restores focus. Maintain this structured daily pattern.",
+                    keyTriggers: ["muted discussion groups", "7 hours sleep", "physics study"]
+                }
+            }
+        ];
+        state.logs = sampleLogs;
+        localStorage.setItem('zenith_journal_logs', JSON.stringify(sampleLogs));
+    }
+}
+
+// Welcome Modal Controller
+function initWelcomeModal() {
+    const overlay = document.getElementById('welcome-modal-overlay');
+    const btnExplore = document.getElementById('btn-explore-demo');
+    const btnEnterKey = document.getElementById('btn-enter-api-key');
+
+    if (!overlay) return; // Guard for Node CLI test environment
+
+    const dismissed = localStorage.getItem('zenith_welcome_dismissed');
+    if (!dismissed) {
+        overlay.classList.remove('hidden');
+    } else {
+        overlay.classList.add('hidden');
+    }
+
+    btnExplore.addEventListener('click', () => {
+        localStorage.setItem('zenith_welcome_dismissed', 'true');
+        overlay.classList.add('hidden');
+    });
+
+    btnEnterKey.addEventListener('click', () => {
+        localStorage.setItem('zenith_welcome_dismissed', 'true');
+        overlay.classList.add('hidden');
+        openDrawer();
+    });
 }

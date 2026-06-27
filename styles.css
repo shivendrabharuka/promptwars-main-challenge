@@ -1835,3 +1835,93 @@ body {
         padding-top: 20px;
     }
 }
+
+/* Welcome Modal Styles */
+.welcome-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(4, 6, 12, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: var(--transition-smooth);
+}
+
+.welcome-modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.welcome-modal {
+    max-width: 500px;
+    width: 90%;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    animation: scaleUpMessage 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.welcome-header h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-body {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    line-height: 1.6;
+}
+
+.welcome-body ul {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.welcome-body li strong {
+    color: var(--color-secondary);
+}
+
+.welcome-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.status-dot.success-demo {
+    background-color: var(--color-secondary);
+    box-shadow: 0 0 8px var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+    .welcome-footer {
+        flex-direction: column;
+    }
+    .welcome-footer button {
+        width: 100%;
+    }
+}

@@ -45,7 +45,8 @@ global.document = {
     },
     querySelector: () => createMockElement(),
     querySelectorAll: () => [],
-    getElementById: (id) => createMockElement(id)
+    getElementById: (id) => createMockElement(id),
+    createElement: () => createMockElement()
 };
 
 global.localStorage = {
@@ -71,7 +72,7 @@ global.Event = class {
 };
 
 // Import app.js code by evaluating it
-const appJsPath = path.join(__dirname, 'src', 'app.js');
+const appJsPath = path.join(__dirname, 'app.js');
 let appJsCode = fs.readFileSync(appJsPath, 'utf8');
 
 // Replace const state with global.state so it is accessible outside eval
@@ -79,7 +80,7 @@ appJsCode = appJsCode.replace('const state =', 'global.state =');
 
 // Run evaluation at module scope
 eval(appJsCode);
-console.log('✅ Successfully loaded and parsed src/app.js');
+console.log('✅ Successfully loaded and parsed app.js');
 
 // Manually trigger DOMContentLoaded to initialize app.js variables
 if (eventListeners['DOMContentLoaded']) {

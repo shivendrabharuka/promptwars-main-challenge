@@ -73,8 +73,8 @@
 
             <div class="sidebar-footer">
                 <div class="api-status-badge" id="api-status-indicator">
-                    <span class="status-dot warning"></span>
-                    <span class="status-text">Mock Mode</span>
+                    <span class="status-dot success-demo"></span>
+                    <span class="status-text">Smart Demo Active</span>
                 </div>
                 <button class="settings-trigger-btn" id="open-settings-btn">
                     <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -294,8 +294,7 @@
 
                             <!-- Submit button -->
                             <div class="editor-footer">
-                                <p class="api-warning-note text-muted" id="journal-api-note">Running in Mock Mode. Enter
-                                    a Google AI Studio API Key in settings for live analysis.</p>
+                                <p class="api-warning-note text-muted" id="journal-api-note">Running in Smart Demo Mode. Configure a custom Gemini Key in settings if desired.</p>
                                 <button class="action-btn-primary" id="btn-analyze-journal">
                                     <span class="btn-spinner hidden" id="analyze-spinner"></span>
                                     <span>Analyze Journal Entry</span>
@@ -588,6 +587,32 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- WELCOME MODAL -->
+    <div class="welcome-modal-overlay" id="welcome-modal-overlay">
+        <div class="welcome-modal glass-panel">
+            <div class="welcome-header">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M3.05 12h1.5m16.45 0h1.5m-1.74-7.26l-1.06 1.06M6.34 17.66l-1.06 1.06m12.72 12.72l-1.06-1.06M6.34 6.34l-1.06-1.06M12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5z" />
+                    </svg>
+                </div>
+                <h2>Welcome to Zenith Academy AI</h2>
+            </div>
+            <div class="welcome-body">
+                <p>Zenith Academy AI is a responsive mental well-being companion designed specifically for students facing competitive examination stress.</p>
+                <p>Evaluators can choose how they wish to explore the application:</p>
+                <ul>
+                    <li><strong>Rich Demo Mode:</strong> Explore pre-populated analytics, interactive SVG trigger matrix nodes, and keyword-responsive coping chat playgrounds without configuring credentials.</li>
+                    <li><strong>Live Gemini Mode:</strong> Connect directly to Google AI Studio's Gemini 2.5 Flash endpoint for real-time journal text analysis and empathetic dialog context.</li>
+                </ul>
+            </div>
+            <div class="welcome-footer">
+                <button class="action-btn-secondary" id="btn-explore-demo">Explore Rich Demo Mode</button>
+                <button class="action-btn-primary" id="btn-enter-api-key">Enter Gemini API Key</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
