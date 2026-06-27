@@ -31,20 +31,22 @@ let timelineSvg;
 let matrixSvg;
 
 // Initialize App
-document.addEventListener('DOMContentLoaded', () => {
-    initDOMElements();
-    loadSettings();
-    initializeSeedData();
-    initRouting();
-    initMarkdownEditor();
-    initSettingsDrawer();
-    initWelcomeModal();
-    initDataActions();
-    initChatWidget();
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initDOMElements();
+        loadSettings();
+        initializeSeedData();
+        initRouting();
+        initMarkdownEditor();
+        initSettingsDrawer();
+        initWelcomeModal();
+        initDataActions();
+        initChatWidget();
 
-    // Render initial dashboards
-    updateUI();
-});
+        // Render initial dashboards
+        updateUI();
+    });
+}
 
 // Cache DOM Elements
 function initDOMElements() {
@@ -64,17 +66,25 @@ function initDOMElements() {
 
 // Load configurations from local storage
 function loadSettings() {
-    state.apiKey = localStorage.getItem('zenith_api_key') || '';
-    apiKeyInput.value = state.apiKey;
-    updateAPIStatusUI();
+    if (typeof localStorage !== 'undefined') {
+        state.apiKey = localStorage.getItem('zenith_api_key') || '';
+    }
+    if (typeof document !== 'undefined' && apiKeyInput) {
+        apiKeyInput.value = state.apiKey;
+    }
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        updateAPIStatusUI();
+    }
 
-    const savedLogs = localStorage.getItem('zenith_journal_logs');
-    if (savedLogs) {
-        try {
-            state.logs = JSON.parse(savedLogs);
-        } catch (e) {
-            console.error('Failed to parse saved logs:', e);
-            state.logs = [];
+    if (typeof localStorage !== 'undefined') {
+        const savedLogs = localStorage.getItem('zenith_journal_logs');
+        if (savedLogs) {
+            try {
+                state.logs = JSON.parse(savedLogs);
+            } catch (e) {
+                console.error('Failed to parse saved logs:', e);
+                state.logs = [];
+            }
         }
     }
 }
@@ -82,28 +92,34 @@ function loadSettings() {
 // Save Key and update UI status
 function saveAPIKey(key) {
     state.apiKey = key.trim();
-    localStorage.setItem('zenith_api_key', state.apiKey);
-    updateAPIStatusUI();
-
-    // Flash Success message in drawer
-    const indicator = document.getElementById('key-success-indicator');
-    indicator.classList.remove('hidden');
-    setTimeout(() => indicator.classList.add('hidden'), 3000);
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('zenith_api_key', state.apiKey);
+    }
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        updateAPIStatusUI();
+        // Flash Success message in drawer
+        const indicator = document.getElementById('key-success-indicator');
+        if (indicator) {
+            indicator.classList.remove('hidden');
+            setTimeout(() => indicator.classList.add('hidden'), 3000);
+        }
+    }
 }
 
 // Updates indicator dots
 function updateAPIStatusUI() {
+    if (typeof window === 'undefined' || typeof document === 'undefined' || !apiStatusIndicator) return;
     const dot = apiStatusIndicator.querySelector('.status-dot');
     const txt = apiStatusIndicator.querySelector('.status-text');
     const warningLabel = document.getElementById('journal-api-note');
 
     if (state.apiKey) {
-        dot.className = 'status-dot success pulse-green';
-        txt.textContent = 'Gemini 2.5 Flash: Active';
+        if (dot) dot.className = 'status-dot success pulse-green';
+        if (txt) txt.textContent = 'Gemini 2.5 Flash: Active';
         if (warningLabel) warningLabel.textContent = 'Connected to Gemini 2.5 Flash API.';
     } else {
-        dot.className = 'status-dot success-demo';
-        txt.textContent = 'Live AI: Disconnected - Running Local Inference';
+        if (dot) dot.className = 'status-dot success-demo';
+        if (txt) txt.textContent = 'Live AI: Disconnected - Running Local Inference';
         if (warningLabel) warningLabel.textContent = 'Running in Smart Demo Mode. Configure a custom Gemini Key in settings if desired.';
     }
 }
@@ -323,11 +339,13 @@ function initSettingsDrawer() {
 }
 
 function openDrawer() {
+    if (typeof window === 'undefined' || typeof document === 'undefined' || !settingsDrawer || !settingsOverlay) return;
     settingsDrawer.classList.add('open');
     settingsOverlay.classList.add('open');
 }
 
 function closeDrawer() {
+    if (typeof window === 'undefined' || typeof document === 'undefined' || !settingsDrawer || !settingsOverlay) return;
     settingsDrawer.classList.remove('open');
     settingsOverlay.classList.remove('open');
 }
@@ -1391,6 +1409,7 @@ function loadMockHistory() {
 
 // Seeds 4 detailed logs on first load if localStorage is empty
 function initializeSeedData() {
+    if (typeof localStorage === 'undefined') return;
     const savedLogs = localStorage.getItem('zenith_journal_logs');
     if (!savedLogs || JSON.parse(savedLogs).length === 0) {
         const sampleLogs = [
@@ -1462,27 +1481,36 @@ function initializeSeedData() {
 
 // Welcome Modal Controller
 function initWelcomeModal() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
     const overlay = document.getElementById('welcome-modal-overlay');
     const btnExplore = document.getElementById('btn-explore-demo');
     const btnEnterKey = document.getElementById('btn-enter-api-key');
 
-    if (!overlay) return; // Guard for Node CLI test environment
+    if (!overlay) return;
 
-    const dismissed = localStorage.getItem('zenith_welcome_dismissed');
+    const dismissed = typeof localStorage !== 'undefined' ? localStorage.getItem('zenith_welcome_dismissed') : null;
     if (!dismissed) {
         overlay.classList.remove('hidden');
     } else {
         overlay.classList.add('hidden');
     }
 
-    btnExplore.addEventListener('click', () => {
-        localStorage.setItem('zenith_welcome_dismissed', 'true');
-        overlay.classList.add('hidden');
-    });
+    if (btnExplore) {
+        btnExplore.addEventListener('click', () => {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem('zenith_welcome_dismissed', 'true');
+            }
+            overlay.classList.add('hidden');
+        });
+    }
 
-    btnEnterKey.addEventListener('click', () => {
-        localStorage.setItem('zenith_welcome_dismissed', 'true');
-        overlay.classList.add('hidden');
-        openDrawer();
-    });
+    if (btnEnterKey) {
+        btnEnterKey.addEventListener('click', () => {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem('zenith_welcome_dismissed', 'true');
+            }
+            overlay.classList.add('hidden');
+            openDrawer();
+        });
+    }
 }

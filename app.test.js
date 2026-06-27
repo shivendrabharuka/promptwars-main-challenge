@@ -9,91 +9,93 @@ const assert = require('assert');
 
 console.log('🧪 Starting Zenith Academy AI Test Suite...');
 
-// Mock Browser Environment
-const eventListeners = {};
+// Mock Browser Environment only if not already provided by native sandbox
+let eventListeners = {};
 
-const createMockElement = (id = '') => ({
-    value: '',
-    textContent: '',
-    innerHTML: '',
-    className: '',
-    style: { width: '0%', left: '0px', top: '0px', transform: '', zIndex: '0', pointerEvents: '', padding: '', fontSize: '', borderRadius: '', minWidth: '', background: '', border: '', boxShadow: '', transition: '' },
-    classList: {
-        add: () => { },
-        remove: () => { },
-        toggle: () => { },
-        contains: () => false
-    },
-    addEventListener: (event, cb) => {
-        if (!eventListeners[event]) eventListeners[event] = [];
-        eventListeners[event].push(cb);
-    },
-    querySelector: () => createMockElement(),
-    querySelectorAll: () => [],
-    appendChild: () => { },
-    scrollIntoView: () => { },
-    getBoundingClientRect: () => ({ left: 0, top: 0, width: 0, height: 0 })
-});
+if (typeof global.window === 'undefined') {
+    const createMockElement = (id = '') => ({
+        value: '',
+        textContent: '',
+        innerHTML: '',
+        className: '',
+        style: { width: '0%', left: '0px', top: '0px', transform: '', zIndex: '0', pointerEvents: '', padding: '', fontSize: '', borderRadius: '', minWidth: '', background: '', border: '', boxShadow: '', transition: '' },
+        classList: {
+            add: () => { },
+            remove: () => { },
+            toggle: () => { },
+            contains: () => false
+        },
+        addEventListener: (event, cb) => {
+            if (!eventListeners[event]) eventListeners[event] = [];
+            eventListeners[event].push(cb);
+        },
+        querySelector: () => createMockElement(),
+        querySelectorAll: () => [],
+        appendChild: () => { },
+        scrollIntoView: () => { },
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: 0, height: 0 })
+    });
 
-global.localStorage = {
-    _store: {},
-    getItem(key) {
-        return this._store[key] || null;
-    },
-    setItem(key, value) {
-        this._store[key] = String(value);
-    },
-    removeItem(key) {
-        delete this._store[key];
-    },
-    clear() {
-        this._store = {};
-    }
-};
+    global.localStorage = {
+        _store: {},
+        getItem(key) {
+            return this._store[key] || null;
+        },
+        setItem(key, value) {
+            this._store[key] = String(value);
+        },
+        removeItem(key) {
+            delete this._store[key];
+        },
+        clear() {
+            this._store = {};
+        }
+    };
 
-global.document = {
-    addEventListener: (event, cb) => {
-        if (!eventListeners[event]) eventListeners[event] = [];
-        eventListeners[event].push(cb);
-    },
-    querySelector: () => createMockElement(),
-    querySelectorAll: () => [],
-    getElementById: (id) => createMockElement(id),
-    createElement: () => createMockElement()
-};
+    global.document = {
+        addEventListener: (event, cb) => {
+            if (!eventListeners[event]) eventListeners[event] = [];
+            eventListeners[event].push(cb);
+        },
+        querySelector: () => createMockElement(),
+        querySelectorAll: () => [],
+        getElementById: (id) => createMockElement(id),
+        createElement: () => createMockElement()
+    };
 
-global.window = {
-    addEventListener: (event, cb) => {
-        if (!eventListeners[event]) eventListeners[event] = [];
-        eventListeners[event].push(cb);
-    },
-    localStorage: global.localStorage,
-    document: global.document,
-    location: { href: '', search: '', hash: '' }
-};
+    global.window = {
+        addEventListener: (event, cb) => {
+            if (!eventListeners[event]) eventListeners[event] = [];
+            eventListeners[event].push(cb);
+        },
+        localStorage: global.localStorage,
+        document: global.document,
+        location: { href: '', search: '', hash: '' }
+    };
 
-global.navigator = {
-    userAgent: 'Node.js Headless Environment'
-};
+    global.navigator = {
+        userAgent: 'Node.js Headless Environment'
+    };
 
-global.alert = () => {};
-global.confirm = () => true;
+    global.alert = () => {};
+    global.confirm = () => true;
 
-global.fetch = () => Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({})
-});
+    global.fetch = () => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({})
+    });
 
-global.FileReader = class {
-    readAsText() {}
-    addEventListener() {}
-};
+    global.FileReader = class {
+        readAsText() {}
+        addEventListener() {}
+    };
 
-global.Event = class {
-    constructor(name) {
-        this.name = name;
-    }
-};
+    global.Event = class {
+        constructor(name) {
+            this.name = name;
+        }
+    };
+}
 
 // Import app.js code by evaluating it
 const appJsPath = path.join(__dirname, 'app.js');
