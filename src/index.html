@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith Academy AI - Student Mental Well-being Companion</title>
+    <meta name="description"
+        content="Zenith Academy AI is a responsive, client-side companion for student mental well-being, tracking competitive exam anxieties and offering empathetic AI evaluations.">
+
+    <!-- Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 3v1.5M12 19.5V21M3.05 12h1.5m16.45 0h1.5m-1.74-7.26l-1.06 1.06M6.34 17.66l-1.06 1.06m12.72 12.72l-1.06-1.06M6.34 6.34l-1.06-1.06M12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5z" />
+                        </svg>
+                    </div>
+                    <span class="logo-text">Zenith AI</span>
+                </div>
+                <p class="logo-subtitle">Academy Well-being</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-view="dashboard" id="btn-dashboard">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-btn" data-view="journal" id="btn-journal">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Daily Journal</span>
+                </button>
+
+                <button class="nav-btn" data-view="triggers" id="btn-triggers">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Trigger Matrix</span>
+                </button>
+
+                <button class="nav-btn" data-view="chat" id="btn-chat">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span>Calm AI Chat</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="api-status-badge" id="api-status-indicator">
+                    <span class="status-dot warning"></span>
+                    <span class="status-text">Mock Mode</span>
+                </div>
+                <button class="settings-trigger-btn" id="open-settings-btn">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Mobile Navigation Bar -->
+        <header class="mobile-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v1.5M12 19.5V21M3.05 12h1.5m16.45 0h1.5m-1.74-7.26l-1.06 1.06M6.34 17.66l-1.06 1.06m12.72 12.72l-1.06-1.06M6.34 6.34l-1.06-1.06M12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Zenith AI</span>
+            </div>
+            <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Toggle Menu">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main-content">
+
+            <!-- Top Overview Bar -->
+            <section class="overview-header">
+                <div class="header-text-group">
+                    <h1 id="view-title">Dashboard Overview</h1>
+                    <p id="view-subtitle" class="text-muted">A glance at your academic well-being, analytics, and
+                        patterns.</p>
+                </div>
+
+                <div class="quick-status-container">
+                    <div class="status-pill-item">
+                        <span class="pill-label">Well-being Score</span>
+                        <span class="pill-value" id="hdr-wellbeing-score">--</span>
+                    </div>
+                    <div class="status-pill-item">
+                        <span class="pill-label">Anxiety Level</span>
+                        <span class="pill-value alert-text" id="hdr-anxiety-level">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Views Container -->
+            <div class="views-wrapper">
+
+                <!-- DASHBOARD VIEW -->
+                <div class="view-panel active" id="view-dashboard">
+                    <!-- Stats Summary Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel animate-fade-in">
+                            <div class="stat-card-header">
+                                <span class="stat-title">Overall Calmness</span>
+                                <span class="stat-icon calm-tint">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="stat-value" id="stat-wellbeing">--</div>
+                            <div class="stat-desc text-muted">Out of 10. Higher is calmer.</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar bg-calm" id="bar-wellbeing" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-panel animate-fade-in delay-1">
+                            <div class="stat-card-header">
+                                <span class="stat-title">Backlog Anxiety</span>
+                                <span class="stat-icon orange-tint">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.582.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="stat-value" id="stat-backlog">--</div>
+                            <div class="stat-desc text-muted">Average anxiety score (0-10)</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar bg-backlog" id="bar-backlog" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-panel animate-fade-in delay-2">
+                            <div class="stat-card-header">
+                                <span class="stat-title">Mock Test Anxiety</span>
+                                <span class="stat-icon rose-tint">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="stat-value" id="stat-mock">--</div>
+                            <div class="stat-desc text-muted">Average anxiety score (0-10)</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar bg-mock" id="bar-mock" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-panel animate-fade-in delay-3">
+                            <div class="stat-card-header">
+                                <span class="stat-title">Peer Stress</span>
+                                <span class="stat-icon purple-tint">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="stat-value" id="stat-peer">--</div>
+                            <div class="stat-desc text-muted">Average anxiety score (0-10)</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar bg-peer" id="bar-peer" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Primary Graph Layout -->
+                    <div class="dashboard-charts-row">
+                        <div class="chart-wrapper glass-panel">
+                            <div class="chart-header">
+                                <div class="chart-title-group">
+                                    <h3>Well-being & Anxiety Timeline</h3>
+                                    <p class="text-muted">Tracking logs and emotional patterns over time</p>
+                                </div>
+                                <div class="chart-legend" id="timeline-legend">
+                                    <span class="legend-item"><span class="dot legend-wellbeing"></span> Calmness</span>
+                                    <span class="legend-item"><span class="dot legend-backlog"></span> Backlog</span>
+                                    <span class="legend-item"><span class="dot legend-mock"></span> Mock Test</span>
+                                    <span class="legend-item"><span class="dot legend-peer"></span> Peer Stress</span>
+                                </div>
+                            </div>
+                            <div class="svg-container" id="timeline-chart-container">
+                                <!-- SVG Chart will be injected programmatically by app.js -->
+                                <svg id="timeline-svg" viewBox="0 0 800 320" width="100%" height="100%">
+                                    <text x="400" y="160" fill="rgba(255,255,255,0.4)" text-anchor="middle"
+                                        font-size="14">No journal logs recorded yet. Start writing to view
+                                        charts.</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="side-panel-insights glass-panel">
+                            <h3>Quick AI Insights</h3>
+                            <div class="insight-list" id="dashboard-insights">
+                                <div class="insight-placeholder text-center text-muted">
+                                    <p>Write your first journal entry or load sample data to receive AI cognitive
+                                        tracking insights.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JOURNAL VIEW -->
+                <div class="view-panel" id="view-journal">
+                    <div class="journal-layout">
+                        <!-- Left Pane: Editor -->
+                        <div class="journal-editor-pane glass-panel">
+                            <div class="pane-header">
+                                <h3>Draft Daily Journal</h3>
+                                <span class="character-count" id="editor-counter">0 words</span>
+                            </div>
+
+                            <!-- Prompt suggestion chips -->
+                            <div class="prompt-suggestions-row">
+                                <span class="prompt-chip-label text-muted">Helper Templates:</span>
+                                <button class="prompt-chip" data-template="mock-test">📉 Post-Mock Test Dump</button>
+                                <button class="prompt-chip" data-template="backlog-panic">📚 Backlog Overwhelm</button>
+                                <button class="prompt-chip" data-template="peer-pressure">👥 Peer Comparison
+                                    Dump</button>
+                            </div>
+
+                            <!-- Markdown toolbar -->
+                            <div class="markdown-toolbar">
+                                <button class="toolbar-btn" data-syntax="**" title="Bold text">
+                                    <strong>B</strong>
+                                </button>
+                                <button class="toolbar-btn" data-syntax="*" title="Italic text">
+                                    <em>I</em>
+                                </button>
+                                <button class="toolbar-btn" data-syntax="### " title="Heading">
+                                    H3
+                                </button>
+                                <button class="toolbar-btn" data-syntax="> " title="Empathetic Quote">
+                                    &ldquo;
+                                </button>
+                                <button class="toolbar-btn" data-syntax="- " title="Bullet List">
+                                    &bull; List
+                                </button>
+                                <button class="toolbar-btn" data-syntax="```\n" data-suffix="\n```" title="Code Block">
+                                    Code
+                                </button>
+                                <button class="toolbar-btn" id="btn-clear-editor" title="Clear Editor"
+                                    style="margin-left: auto; color: var(--color-rose);">
+                                    Clear
+                                </button>
+                            </div>
+
+                            <!-- Textarea -->
+                            <textarea class="journal-textarea" id="journal-input"
+                                placeholder="How was your academic day? Write freely in markdown format. E.g., 'Today I felt overwhelmed because of my backlog. I missed a mock test and feel like everyone is ahead of me...'"></textarea>
+
+                            <!-- Submit button -->
+                            <div class="editor-footer">
+                                <p class="api-warning-note text-muted" id="journal-api-note">Running in Mock Mode. Enter
+                                    a Google AI Studio API Key in settings for live analysis.</p>
+                                <button class="action-btn-primary" id="btn-analyze-journal">
+                                    <span class="btn-spinner hidden" id="analyze-spinner"></span>
+                                    <span>Analyze Journal Entry</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Pane: Preview -->
+                        <div class="journal-preview-pane glass-panel">
+                            <div class="pane-header">
+                                <h3>Live Markdown Preview</h3>
+                            </div>
+                            <div class="markdown-preview-content" id="journal-preview"
+                                data-placeholder="Markdown preview will render here in real-time...">
+                                <!-- Rendered Markdown goes here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Journal Analysis Result Container (Appears after submission) -->
+                    <div class="analysis-result-container glass-panel hidden" id="analysis-result-section">
+                        <div class="analysis-result-header">
+                            <div class="heading-group">
+                                <h3>Well-being Assessment</h3>
+                                <p class="text-muted" id="assessment-timestamp">Analyzed on June 27, 2026</p>
+                            </div>
+                            <div class="assessment-badges">
+                                <span class="badge" id="assessment-mood-badge">Mood: --</span>
+                                <span class="badge calm-tint" id="assessment-score-badge">Calmness: --/10</span>
+                            </div>
+                        </div>
+
+                        <div class="analysis-grid">
+                            <!-- Left side: Empathetic response -->
+                            <div class="ai-assessment-narrative">
+                                <h4>Empathetic Coping Guidance</h4>
+                                <div class="narrative-content" id="assessment-narrative">
+                                    Loading analysis response...
+                                </div>
+
+                                <div class="trigger-words-box">
+                                    <h5>Extracted Anxiety Triggers:</h5>
+                                    <div class="trigger-chips-container" id="assessment-triggers">
+                                        <!-- Triggers injected here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right side: Score breakdown -->
+                            <div class="ai-assessment-metrics">
+                                <h4>Anxiety Metrics Breakdown</h4>
+
+                                <div class="metric-score-row">
+                                    <div class="metric-info">
+                                        <span class="metric-name">Backlog Panic</span>
+                                        <span class="metric-val" id="val-assessment-backlog">0/10</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar bg-backlog" id="bar-assessment-backlog"
+                                            style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-score-row">
+                                    <div class="metric-info">
+                                        <span class="metric-name">Mock Test Drops</span>
+                                        <span class="metric-val" id="val-assessment-mock">0/10</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar bg-mock" id="bar-assessment-mock" style="width: 0%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-score-row">
+                                    <div class="metric-info">
+                                        <span class="metric-name">Peer Comparison</span>
+                                        <span class="metric-val" id="val-assessment-peer">0/10</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar bg-peer" id="bar-assessment-peer" style="width: 0%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="metric-score-row">
+                                    <div class="metric-info">
+                                        <span class="metric-name">Other Stress</span>
+                                        <span class="metric-val" id="val-assessment-other">0/10</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar bg-primary" id="bar-assessment-other"
+                                            style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRIGGER MATRIX VIEW -->
+                <div class="view-panel" id="view-triggers">
+                    <div class="triggers-layout glass-panel">
+                        <div class="triggers-info-pane">
+                            <h3>Academic Stress Trigger Matrix</h3>
+                            <p class="text-muted">An interactive relational network graph representing key stress
+                                categories, their intensities, and correlations. Hover nodes to view context and coping
+                                tools.</p>
+
+                            <div class="nodes-legend">
+                                <div class="node-legend-item"><span class="legend-color-dot bg-backlog"></span> Backlog
+                                    Panic</div>
+                                <div class="node-legend-item"><span class="legend-color-dot bg-mock"></span> Mock Test
+                                    Drops</div>
+                                <div class="node-legend-item"><span class="legend-color-dot bg-peer"></span> Peer
+                                    Comparison</div>
+                                <div class="node-legend-item"><span class="legend-color-dot bg-primary"></span> Other
+                                    Stressors</div>
+                            </div>
+                        </div>
+
+                        <div class="matrix-canvas-wrapper" id="matrix-canvas-container">
+                            <!-- Custom SVG Trigger Matrix Graph -->
+                            <svg id="matrix-svg" viewBox="0 0 600 400" width="100%" height="100%">
+                                <!-- Graph components rendered dynamically by app.js -->
+                                <text x="300" y="200" fill="rgba(255,255,255,0.4)" text-anchor="middle"
+                                    font-size="14">No journal logs recorded yet. Create journals to see relational
+                                    triggers.</text>
+                            </svg>
+                        </div>
+
+                        <div class="trigger-matrix-details hidden" id="matrix-details-panel">
+                            <div class="details-header">
+                                <span class="details-badge" id="matrix-details-badge">Trigger Category</span>
+                                <span class="details-average" id="matrix-details-avg">Avg Stress: 0/10</span>
+                            </div>
+                            <h4 id="matrix-details-title">Select a trigger node to inspect</h4>
+                            <p id="matrix-details-desc">Hovering or clicking on a node shows tailored coping
+                                recommendations and its relation to other factors.</p>
+
+                            <div class="trigger-recommendation-box">
+                                <h5>Coping Strategy Recommendation:</h5>
+                                <p class="recommendation-text" id="matrix-details-reco">Please hover over any circle
+                                    node in the Trigger Matrix to receive dynamic coping advice based on your history.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPATHETIC CHAT PLAYGROUND -->
+                <div class="view-panel" id="view-chat">
+                    <div class="chat-layout glass-panel">
+
+                        <!-- Chat Header -->
+                        <div class="chat-panel-header">
+                            <div class="chat-avatar">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="chat-info">
+                                <h3>Calm Coping Assistant</h3>
+                                <span class="text-muted" id="chat-sub-status">Active & Listening</span>
+                            </div>
+                            <button class="icon-only-btn" id="btn-clear-chat" title="Clear Conversation">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    style="width: 20px; height: 20px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Messages Box -->
+                        <div class="chat-messages-container" id="chat-messages">
+                            <div class="chat-message bot-msg animate-fade-in">
+                                <div class="message-content">
+                                    Hello! I am your Zenith Academy Well-being Coach. Competitive exams like JEE, NEET,
+                                    or UPSC can generate immense pressure.
+                                    Whether you are dealing with a mounting backlog, mock test scores dropping, or
+                                    comparison with peer ranks, I am here to help you unpack your thoughts.
+                                    <br><br>
+                                    What is on your mind today? Feel free to write anything.
+                                </div>
+                                <span class="msg-time">Just now</span>
+                            </div>
+                        </div>
+
+                        <!-- Suggestions chips row -->
+                        <div class="chat-suggestions-row" id="chat-suggestions-container">
+                            <button class="chat-suggest-chip">How do I overcome mock test panic?</button>
+                            <button class="chat-suggest-chip">I feel so far behind on my syllabus backlog.</button>
+                            <button class="chat-suggest-chip">Everyone else seems to be scoring higher than me.</button>
+                        </div>
+
+                        <!-- Input area -->
+                        <div class="chat-input-area">
+                            <input type="text" class="chat-textbox" id="chat-textbox"
+                                placeholder="Ask Zenith AI anything about dealing with preparation stress...">
+                            <button class="chat-send-btn" id="btn-chat-send" aria-label="Send message">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- SETTINGS DRAWER -->
+        <div class="settings-drawer-overlay" id="settings-overlay"></div>
+        <div class="settings-drawer" id="settings-drawer">
+            <div class="drawer-header">
+                <h3>Zenith Configuration</h3>
+                <button class="close-drawer-btn" id="close-settings-btn" aria-label="Close Settings">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="drawer-body">
+
+                <!-- API KEY CONTAINER -->
+                <div class="drawer-section">
+                    <h4>Google AI Studio API Key</h4>
+                    <p class="text-muted text-small mb-1">We analyze journals and power the Calm chat using Google's
+                        <strong>Gemini 2.5 Flash</strong> endpoint. Your key is stored strictly local in your browser's
+                        <code>localStorage</code>.</p>
+
+                    <div class="api-key-input-group">
+                        <input type="password" class="settings-input" id="api-key-input" placeholder="AIzaSy...">
+                        <button class="toggle-password-btn" id="toggle-key-visibility"
+                            aria-label="Toggle Password Visibility">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" id="eye-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="key-actions-row">
+                        <button class="action-btn-primary full-width" id="btn-save-key">Save Configuration</button>
+                    </div>
+
+                    <div class="api-key-indicator success hidden" id="key-success-indicator">
+                        <span class="status-dot success"></span>
+                        <span>API key saved locally</span>
+                    </div>
+                </div>
+
+                <!-- DATA MANAGEMENT SECTION -->
+                <div class="drawer-section border-top">
+                    <h4>Well-being Log Data</h4>
+                    <p class="text-muted text-small mb-2">Populate, download, or clear your student logs.</p>
+
+                    <div class="data-actions-vertical">
+                        <button class="action-btn-secondary" id="btn-load-mock-history">
+                            🚀 Load Sample Historical Logs (5 Days)
+                        </button>
+                        <button class="action-btn-secondary" id="btn-export-data">
+                            📥 Export Data (JSON)
+                        </button>
+                        <label class="action-btn-secondary text-center cursor-pointer" id="lbl-import-data">
+                            📤 Import Data (JSON)
+                            <input type="file" id="file-import-data" class="hidden-input" accept=".json">
+                        </label>
+                        <button class="action-btn-outline alert-btn" id="btn-clear-history">
+                            ⚠️ Clear All Logs & Key
+                        </button>
+                    </div>
+                </div>
+
+                <!-- INFORMATION SECTION -->
+                <div class="drawer-section border-top text-center">
+                    <p class="text-muted text-small">Zenith Academy AI v1.0.0</p>
+                    <p class="text-muted text-tiny">Built for student stress alleviation, competitive examination
+                        recovery, and emotional regulation analytics.</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
