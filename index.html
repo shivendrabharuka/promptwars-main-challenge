@@ -72,9 +72,12 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="api-status-badge" id="api-status-indicator">
-                    <span class="status-dot success-demo"></span>
-                    <span class="status-text">Smart Demo Active</span>
+                <div class="genai-status-container">
+                    <span class="genai-status-label">GenAI Engine Status</span>
+                    <div class="api-status-badge" id="api-status-indicator">
+                        <span class="status-dot success-demo"></span>
+                        <span class="status-text">Live AI: Disconnected - Running Local Inference</span>
+                    </div>
                 </div>
                 <button class="settings-trigger-btn" id="open-settings-btn">
                     <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -602,9 +605,10 @@
             </div>
             <div class="welcome-body">
                 <p>Zenith Academy AI is a responsive mental well-being companion designed specifically for students facing competitive examination stress.</p>
+                <p>Please note that Demo Mode utilizes local heuristic inference, while unlocking the API Key enables real-time Gemini 2.5 Flash analysis.</p>
                 <p>Evaluators can choose how they wish to explore the application:</p>
                 <ul>
-                    <li><strong>Rich Demo Mode:</strong> Explore pre-populated analytics, interactive SVG trigger matrix nodes, and keyword-responsive coping chat playgrounds without configuring credentials.</li>
+                    <li><strong>Rich Demo Mode:</strong> Explore pre-populated analytics, interactive SVG trigger matrix nodes, and keyword-responsive coping chat playgrounds using local heuristic inference.</li>
                     <li><strong>Live Gemini Mode:</strong> Connect directly to Google AI Studio's Gemini 2.5 Flash endpoint for real-time journal text analysis and empathetic dialog context.</li>
                 </ul>
             </div>

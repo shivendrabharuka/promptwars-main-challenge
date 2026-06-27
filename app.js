@@ -98,12 +98,12 @@ function updateAPIStatusUI() {
     const warningLabel = document.getElementById('journal-api-note');
 
     if (state.apiKey) {
-        dot.className = 'status-dot success';
-        txt.textContent = 'Gemini Live';
+        dot.className = 'status-dot success pulse-green';
+        txt.textContent = 'Gemini 2.5 Flash: Active';
         if (warningLabel) warningLabel.textContent = 'Connected to Gemini 2.5 Flash API.';
     } else {
         dot.className = 'status-dot success-demo';
-        txt.textContent = 'Smart Demo Active';
+        txt.textContent = 'Live AI: Disconnected - Running Local Inference';
         if (warningLabel) warningLabel.textContent = 'Running in Smart Demo Mode. Configure a custom Gemini Key in settings if desired.';
     }
 }

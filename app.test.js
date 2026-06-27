@@ -12,13 +12,6 @@ console.log('🧪 Starting Zenith Academy AI Test Suite...');
 // Mock Browser Environment
 const eventListeners = {};
 
-global.window = {
-    addEventListener: (event, cb) => {
-        if (!eventListeners[event]) eventListeners[event] = [];
-        eventListeners[event].push(cb);
-    }
-};
-
 const createMockElement = (id = '') => ({
     value: '',
     textContent: '',
@@ -31,23 +24,16 @@ const createMockElement = (id = '') => ({
         toggle: () => { },
         contains: () => false
     },
-    addEventListener: () => { },
-    querySelector: () => createMockElement(),
-    querySelectorAll: () => [],
-    appendChild: () => { },
-    scrollIntoView: () => { }
-});
-
-global.document = {
     addEventListener: (event, cb) => {
         if (!eventListeners[event]) eventListeners[event] = [];
         eventListeners[event].push(cb);
     },
     querySelector: () => createMockElement(),
     querySelectorAll: () => [],
-    getElementById: (id) => createMockElement(id),
-    createElement: () => createMockElement()
-};
+    appendChild: () => { },
+    scrollIntoView: () => { },
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: 0, height: 0 })
+});
 
 global.localStorage = {
     _store: {},
@@ -63,6 +49,44 @@ global.localStorage = {
     clear() {
         this._store = {};
     }
+};
+
+global.document = {
+    addEventListener: (event, cb) => {
+        if (!eventListeners[event]) eventListeners[event] = [];
+        eventListeners[event].push(cb);
+    },
+    querySelector: () => createMockElement(),
+    querySelectorAll: () => [],
+    getElementById: (id) => createMockElement(id),
+    createElement: () => createMockElement()
+};
+
+global.window = {
+    addEventListener: (event, cb) => {
+        if (!eventListeners[event]) eventListeners[event] = [];
+        eventListeners[event].push(cb);
+    },
+    localStorage: global.localStorage,
+    document: global.document,
+    location: { href: '', search: '', hash: '' }
+};
+
+global.navigator = {
+    userAgent: 'Node.js Headless Environment'
+};
+
+global.alert = () => {};
+global.confirm = () => true;
+
+global.fetch = () => Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({})
+});
+
+global.FileReader = class {
+    readAsText() {}
+    addEventListener() {}
 };
 
 global.Event = class {
